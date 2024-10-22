@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Form</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Collect form data
+            const name = document.getElementById('name').value;
+            const tagline = document.getElementById('tagline').value;
+            const about = document.getElementById('about').value;
+            const projects = [];
+            for (let i = 1; i <= 3; i++) {
+                projects.push({
+                    title: document.getElementById(`projectTitle${i}`).value,
+                    description: document.getElementById(`projectDesc${i}`).value,
+                    link: document.getElementById(`projectLink${i}`).value
+                });
+            }
+            const skills = document.getElementById('skills').value.split(',');
+
+            // Store data in local storage
+            localStorage.setItem('portfolioData', JSON.stringify({ name, tagline, about, projects, skills }));
+
+            // Redirect to portfolio page
+            window.location.href = 'portfolio.html';
+        }
+
+        function escapeHtml(html) {
+            return html
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function generateHTML() {
+            const data = JSON.parse(localStorage.getItem('portfolioData'));
+            if (!data) return;
+
+            // Construct the HTML code as a string
+            const htmlCode = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(data.name)} | Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>${escapeHtml(data.name)}</h1>
+            <p>${escapeHtml(data.tagline)}</p>
+        </div>
+    </header>
+    <section id="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <p>${escapeHtml(data.about)}</p>
+        </div>
+    </section>
+    <section id="projects">
+        <div class="container">
+            <h2>Projects</h2>
+            ${data.projects.map(project => `
+            <div class="project">
+                <h3>${escapeHtml(project.title)}</h3>
+                <p>${escapeHtml(project.description)}</p>
+                <a href="${escapeHtml(project.link)}" target="_blank">View Project</a>
+            </div>`).join('')}
+        </div>
+    </section>
+    <section id="skills">
+        <div class="container">
+            <h2>Skills</h2>
+            <ul>
+                ${data.skills.map(skill => `<li>${escapeHtml(skill.trim())}</li>`).join('')}
+            </ul>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ${escapeHtml(data.name)}. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>`;
+
+            // Open a new window and write the HTML code to it
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write('<pre>' + escapeHtml(htmlCode) + '</pre>');
+            newWindow.document.close(); // Close the document to render the content
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Portfolio Data Entry</h1>
+    </header>
+
+    <form onsubmit="submitForm(event)">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="tagline">Tagline:</label>
+        <input type="text" id="tagline" name="tagline" required>
+
+        <label for="about">About Me:</label>
+        <textarea id="about" name="about" rows="4" required></textarea>
+
+        <h3>Projects</h3>
+        <div id="projects">
+            <div>
+                <label for="projectTitle1">Project Title 1:</label>
+                <input type="text" id="projectTitle1" required>
+                <label for="projectDesc1">Description:</label>
+                <textarea id="projectDesc1" rows="2" required></textarea>
+                <label for="projectLink1">Project Link:</label>
+                <input type="url" id="projectLink1" required>
+            </div>
+            <div>
+                <label for="projectTitle2">Project Title 2:</label>
+                <input type="text" id="projectTitle2" required>
+                <label for="projectDesc2">Description:</label>
+                <textarea id="projectDesc2" rows="2" required></textarea>
+                <label for="projectLink2">Project Link:</label>
+                <input type="url" id="projectLink2" required>
+            </div>
+            <div>
+                <label for="projectTitle3">Project Title 3:</label>
+                <input type="text" id="projectTitle3" required>
+                <label for="projectDesc3">Description:</label>
+                <textarea id="projectDesc3" rows="2" required></textarea>
+                <label for="projectLink3">Project Link:</label>
+                <input type="url" id="projectLink3" required>
+            </div>
+        </div>
+
+        <label for="skills">Skills (comma separated):</label>
+        <input type="text" id="skills" name="skills" required>
+
+        <button type="submit">Submit</button>
+        <button type="button" onclick="generateHTML()">Generate HTML Code</button>
+    </form>
+</body>
+</html>

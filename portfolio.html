@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name | Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        window.onload = function() {
+            // Get data from local storage
+            const data = JSON.parse(localStorage.getItem('portfolioData'));
+            if (data) {
+                // Populate the portfolio with the data
+                document.getElementById('portfolioName').innerText = data.name;
+                document.getElementById('portfolioTagline').innerText = data.tagline;
+                document.getElementById('portfolioAbout').innerText = data.about;
+
+                const projectsContainer = document.getElementById('projects');
+                data.projects.forEach(project => {
+                    const projectElement = document.createElement('div');
+                    projectElement.className = 'project';
+                    projectElement.innerHTML = `
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <a href="${project.link}" target="_blank">View Project</a>
+                    `;
+                    projectsContainer.appendChild(projectElement);
+                });
+
+                const skillsList = document.getElementById('skillsList');
+                data.skills.forEach(skill => {
+                    const skillItem = document.createElement('li');
+                    skillItem.innerText = skill.trim();
+                    skillsList.appendChild(skillItem);
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 id="portfolioName">Your Name</h1>
+            <p id="portfolioTagline">Your Tagline or Profession</p>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <p id="portfolioAbout">Brief description about yourself. You can include your background, interests, and what you do.</p>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2>Projects</h2>
+            <!-- Projects will be populated here dynamically -->
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="container">
+            <h2>Skills</h2>
+            <ul id="skillsList">
+                <!-- Skills will be populated here dynamically -->
+            </ul>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2>Contact Me</h2>
+            <form action="#" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+                
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 ANANT TRIPATHI All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
