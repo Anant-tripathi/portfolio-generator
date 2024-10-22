@@ -50,6 +50,7 @@ section .container {
 
 .project {
     margin-bottom: 20px;
+    margin-left: 10%;
 }
 
 .project h3 {
